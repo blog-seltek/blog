@@ -18,4 +18,4 @@ tags:
 
 ## 四.如何合理配置线程池的大小
 
-[^原文链接]: (http://www.cnblogs.com/dolphin0520/p/3932921.html)
+- [原文链接] (http://www.cnblogs.com/dolphin0520/p/3932921.html)
