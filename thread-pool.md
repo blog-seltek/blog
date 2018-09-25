@@ -25,6 +25,7 @@ tags:
 
 
 
+## ThreadPoolExecutor
 
 	java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类
 	
@@ -45,6 +46,8 @@ public class ThreadPoolExecutor extends AbstractExecutorService {
         BlockingQueue<Runnable> workQueue,ThreadFactory threadFactory,RejectedExecutionHandler handler);
     ...
 }
+
+从上面的代码可以得知，ThreadPoolExecutor继承了AbstractExecutorService类，并提供了四个构造器，事实上，通过观察每个构造器的源码具体实现，发现前面三个构造器都是调用的第四个构造器进行的初始化工作。
 
 
 
