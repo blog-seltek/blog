@@ -11,16 +11,9 @@ tags:
 
 在并发的线程数量很多，并且每个线程都是执行一个时间很短的任务就结束了的情况下。如果频繁创建线程会大大降低系统的效率，因为频繁创建线程和销毁线程需要时间。在Java中可以通过线程池来达到线程复用，就是执行完一个任务，并不被销毁，而是继续去执行其他的任务。
 
-# 目录大纲：
-一.Java中的ThreadPoolExecutor类
-二.深入剖析线程池实现原理
-三.使用示例
-四.如何合理配置线程池的大小
+# 一、线程池中各重要的类与接口
 
-
-# 一.ThreadPoolExecutor类、AbstractExecutorService类、ExecutorService接口、Executor接口
-
-## ThreadPoolExecutor类
+## 1.ThreadPoolExecutor类
 java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类，在ThreadPoolExecutor类中提供了四个构造方法：
 	
 
@@ -88,7 +81,7 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
 
 #### shutdown()和shutdownNow()是用来关闭线程池的。
 
-## AbstractExecutorService
+## 2.AbstractExecutorService
 
 	public abstract class AbstractExecutorService implements ExecutorService {
 
@@ -123,7 +116,7 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
     		};
 	}
 	
-## ExecutorService接口
+## 3.ExecutorService接口
 
 	public interface ExecutorService extends Executor {
  
@@ -150,13 +143,13 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
     		<T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException;
 	}
 
-## Executor接口
+## 4.Executor接口
 
 	public interface Executor {
     		void execute(Runnable command);
 	}
 	
-## 上述接口、类之间的关系
+## 5.上述接口、类之间的关系
 
 Executor是一个顶层接口，在它里面只声明了一个方法execute(Runnable)，返回值为void，参数为Runnable类型，从字面意思可以理解，就是用来执行传进去的任务的；
 
@@ -167,18 +160,33 @@ Executor是一个顶层接口，在它里面只声明了一个方法execute(Runn
 然后ThreadPoolExecutor继承了类AbstractExecutorService。
 
 
-
-
-
-
-
-
 # 二.线程池实现原理
+
+## 1.线程池状态
+
+## 2.任务的执行
+
+## 3.线程池中的线程初始化
+
+## 4.任务缓存队列及排队策略
+
+## 5.任务拒绝策略
+
+## 6.线程池的关闭
+
+## 7.线程池容量的动态调整
 
 # 三.使用示例
 
 # 四.如何合理配置线程池的大小
 
+一般需要根据任务的类型来配置线程池大小：
+
+　　如果是CPU密集型任务，就需要尽量压榨CPU，参考值可以设为 NCPU+1
+
+　　如果是IO密集型任务，参考值可以设置为2*NCPU
+
+　　当然，这只是一个参考值，具体的设置还需要根据实际情况进行调整，比如可以先将线程池大小设置为参考值，再观察任务运行情况和系统负载、资源利用率来进行适当调整。
 
 
 - [原文链接] (http://www.cnblogs.com/dolphin0520/p/3932921.html)
