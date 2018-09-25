@@ -38,13 +38,13 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
 
 ### 构造器中各个参数的意义：
 
-#### corePoolSize 核心池大小。在创建了线程池后，默认情况下线程中并没有任何线程。而是等到有任务到来时才去创建线程去执行任务。
+#### corePoolSize： 核心池大小。在创建了线程池后，默认情况下线程中并没有任何线程。而是等到有任务到来时才去创建线程去执行任务。
 当有任务来之后，就会创建一个线程去执行任务，当线程池中的线程数目达到corePoolSize后，就会把到达的任务放到缓存队列当中；
 *注：除非调用了prestartAllCoreThreads()或者prestartCoreThread()方法。这两个方法用来创建预线程，即任务没有到来时，便预先创建[corePoolSize]个线程，或者一个线程。*
 
-#### maximumPoolSize 线程池最大线程数。表示在线程池中最多能创建多少个线程
+#### maximumPoolSize： 线程池最大线程数。表示在线程池中最多能创建多少个线程
 
-#### keepAliveTime 表示线程没有任务执行时最多保持多久时间会终止。默认情况下，只有当线程池中的线程数大于corePoolSize时，keepAliveTime才会起作用，直到线程池中的线程数不大于corePoolSize，即当线程池中的线程数大于corePoolSize时，如果一个线程空闲的时间达到keepAliveTime，则会终止，直到线程池中的线程数不超过corePoolSize。
+#### keepAliveTime： 表示线程没有任务执行时最多保持多久时间会终止。默认情况下，只有当线程池中的线程数大于corePoolSize时，keepAliveTime才会起作用，直到线程池中的线程数不大于corePoolSize，即当线程池中的线程数大于corePoolSize时，如果一个线程空闲的时间达到keepAliveTime，则会终止，直到线程池中的线程数不超过corePoolSize。
 *注：但是如果调用了allowCoreThreadTimeOut(boolean)方法，在线程池中的线程数不大于corePoolSize时，keepAliveTime参数也会起作用，直到线程池中的线程数为0；*
 
 #### unit：参数keepAliveTime的时间单位，有7种取值，在TimeUnit类中有7种静态属性：
