@@ -38,16 +38,20 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
 
 ### 构造器中各个参数的意义：
 
-#### corePoolSize： 核心池大小。在创建了线程池后，默认情况下线程中并没有任何线程。而是等到有任务到来时才去创建线程去执行任务。
+#### corePoolSize： 
+核心池大小。在创建了线程池后，默认情况下线程中并没有任何线程。而是等到有任务到来时才去创建线程去执行任务。
 当有任务来之后，就会创建一个线程去执行任务，当线程池中的线程数目达到corePoolSize后，就会把到达的任务放到缓存队列当中；
 *注：除非调用了prestartAllCoreThreads()或者prestartCoreThread()方法。这两个方法用来创建预线程，即任务没有到来时，便预先创建[corePoolSize]个线程，或者一个线程。*
 
-#### maximumPoolSize： 线程池最大线程数。表示在线程池中最多能创建多少个线程
+#### maximumPoolSize： 
+线程池最大线程数。表示在线程池中最多能创建多少个线程
 
-#### keepAliveTime： 表示线程没有任务执行时最多保持多久时间会终止。默认情况下，只有当线程池中的线程数大于corePoolSize时，keepAliveTime才会起作用，直到线程池中的线程数不大于corePoolSize，即当线程池中的线程数大于corePoolSize时，如果一个线程空闲的时间达到keepAliveTime，则会终止，直到线程池中的线程数不超过corePoolSize。
+#### keepAliveTime： 
+表示线程没有任务执行时最多保持多久时间会终止。默认情况下，只有当线程池中的线程数大于corePoolSize时，keepAliveTime才会起作用，直到线程池中的线程数不大于corePoolSize，即当线程池中的线程数大于corePoolSize时，如果一个线程空闲的时间达到keepAliveTime，则会终止，直到线程池中的线程数不超过corePoolSize。
 *注：但是如果调用了allowCoreThreadTimeOut(boolean)方法，在线程池中的线程数不大于corePoolSize时，keepAliveTime参数也会起作用，直到线程池中的线程数为0；*
 
-#### unit：参数keepAliveTime的时间单位，有7种取值，在TimeUnit类中有7种静态属性：
+#### unit：
+参数keepAliveTime的时间单位，有7种取值，在TimeUnit类中有7种静态属性：
 
 	TimeUnit.DAYS;               //天
 	TimeUnit.HOURS;             //小时
@@ -57,7 +61,8 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
 	TimeUnit.MICROSECONDS;      //微妙
 	TimeUnit.NANOSECONDS;       //纳秒
 
-#### workQueue：一个阻塞队列，用来存储等待执行的任务，这个参数的选择也很重要，会对线程池的运行过程产生重大影响，一般来说，这里的阻塞队列有以下几种选择
+#### workQueue：
+一个阻塞队列，用来存储等待执行的任务，这个参数的选择也很重要，会对线程池的运行过程产生重大影响，一般来说，这里的阻塞队列有以下几种选择
 
 	ArrayBlockingQueue;
 	LinkedBlockingQueue;
@@ -65,9 +70,11 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
 	
 *ArrayBlockingQueue和PriorityBlockingQueue使用较少，一般使用LinkedBlockingQueue和Synchronous。线程池的排队策略与BlockingQueue有关。*
 
-#### threadFactory：线程工厂，主要用来创建线程；
+#### threadFactory：
+线程工厂，主要用来创建线程；
 
-#### handler：表示当拒绝处理任务时的策略，有以下四种取值：
+#### handler：
+表示当拒绝处理任务时的策略，有以下四种取值：
 
 	ThreadPoolExecutor.AbortPolicy:丢弃任务并抛出RejectedExecutionException异常。 
 	ThreadPoolExecutor.DiscardPolicy：也是丢弃任务，但是不抛出异常。 
@@ -75,6 +82,7 @@ java.uitl.concurrent.ThreadPoolExecutor类是线程池中最核心的一个类�
 	ThreadPoolExecutor.CallerRunsPolicy：由调用线程处理该任务 
 	
 ### ThreadPoolExecutor类中几个重要的方法
+
 #### execute()方法实际上是Executor中声明的方法，在ThreadPoolExecutor进行了具体的实现，这个方法是ThreadPoolExecutor的核心方法，通过这个方法可以向线程池提交一个任务，交由线程池去执行。
 
 #### submit()方法是在ExecutorService中声明的方法，在AbstractExecutorService就已经有了具体的实现，在ThreadPoolExecutor中并没有对其进行重写，这个方法也是用来向线程池提交任务的，但是它和execute()方法不同，它能够返回任务执	行的结果，去看submit()方法的实现，会发现它实际上还是调用的execute()方法，只不过它利用了Future来获取任务执行结果（Future相关内容将在下一篇讲述）。
@@ -260,20 +268,25 @@ Executor是一个顶层接口，在它里面只声明了一个方法execute(Runn
 　　如果执行完addIfUnderCorePoolSize这个方法返回false，然后接着判断：
 
 	if (runState == RUNNING && workQueue.offer(command))
+	
  　　如果当前线程池处于RUNNING状态，则将任务放入任务缓存队列；如果当前线程池不处于RUNNING状态或者任务放入缓存队列失败，则执行：
 
 	addIfUnderMaximumPoolSize(command)
+	
 　　如果执行addIfUnderMaximumPoolSize方法失败，则执行reject()方法进行任务拒绝处理。
 
 　　回到前面：
 
 	if (runState == RUNNING && workQueue.offer(command))
+	
  　　这句的执行，如果说当前线程池处于RUNNING状态且将任务放入任务缓存队列成功，则继续进行判断：
 
 	if (runState != RUNNING || poolSize == 0)
+	
  　　这句判断是为了防止在将此任务添加进任务缓存队列的同时其他线程突然调用shutdown或者shutdownNow方法关闭了线程池的一种应急措施。如果是这样就执行：
 
 	ensureQueuedTaskHandled(command)
+	
  　　进行应急处理，从名字可以看出是保证 添加到任务缓存队列中的任务得到处理。
 
 　　我们接着看2个关键方法的实现：addIfUnderCorePoolSize和addIfUnderMaximumPoolSize：
@@ -297,6 +310,7 @@ Executor是一个顶层接口，在它里面只声明了一个方法execute(Runn
  　　这个是addIfUnderCorePoolSize方法的具体实现，从名字可以看出它的意图就是当低于核心吃大小时执行的方法。下面看其具体实现，首先获取到锁，因为这地方涉及到线程池状态的变化，先通过if语句判断当前线程池中的线程数目是否小于核心池大小，有朋友也许会有疑问：前面在execute()方法中不是已经判断过了吗，只有线程池当前线程数目小于核心池大小才会执行addIfUnderCorePoolSize方法的，为何这地方还要继续判断？原因很简单，前面的判断过程中并没有加锁，因此可能在execute方法判断的时候poolSize小于corePoolSize，而判断完之后，在其他线程中又向线程池提交了任务，就可能导致poolSize不小于corePoolSize了，所以需要在这个地方继续判断。然后接着判断线程池的状态是否为RUNNING，原因也很简单，因为有可能在其他线程中调用了shutdown或者shutdownNow方法。然后就是执行
 
 	t = addThread(firstTask);
+	
  　　这个方法也非常关键，传进去的参数为提交的任务，返回值为Thread类型。然后接着在下面判断t是否为空，为空则表明创建线程失败（即poolSize>=corePoolSize或者runState不等于RUNNING），否则调用t.start()方法启动线程。
 
 　　我们来看一下addThread方法的实现：
@@ -534,20 +548,21 @@ prestartCoreThread()：初始化一个核心线程；
 prestartAllCoreThreads()：初始化所有核心线程
 　　下面是这2个方法的实现：
 
-public boolean prestartCoreThread() {
-    return addIfUnderCorePoolSize(null); //注意传进去的参数是null
-}
+	public boolean prestartCoreThread() {
+    		return addIfUnderCorePoolSize(null); //注意传进去的参数是null
+	}
  
-public int prestartAllCoreThreads() {
-    int n = 0;
-    while (addIfUnderCorePoolSize(null))//注意传进去的参数是null
-        ++n;
-    return n;
-}
+	public int prestartAllCoreThreads() {
+    		int n = 0;
+    		while (addIfUnderCorePoolSize(null))//注意传进去的参数是null
+        		++n;
+    		return n;
+	}
+	
  　　注意上面传进去的参数是null，根据第2小节的分析可知如果传进去的参数为null，则最后执行线程会阻塞在getTask方法中的
 
-1
-r = workQueue.take();
+	r = workQueue.take();
+	
  　　即等待任务队列中有任务。
  
 ## 任务缓存队列及排队策略
@@ -583,40 +598,41 @@ setMaximumPoolSize：设置线程池最大能创建的线程数目大小
 # 使用示例
 前面我们讨论了关于线程池的实现原理，这一节我们来看一下它的具体使用：
 
-public class Test {
-     public static void main(String[] args) {   
-         ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
-                 new ArrayBlockingQueue<Runnable>(5));
+	public class Test {
+     	public static void main(String[] args) {   
+         	ThreadPoolExecutor executor = new ThreadPoolExecutor(5, 10, 200, TimeUnit.MILLISECONDS,
+                 	new ArrayBlockingQueue<Runnable>(5));
           
-         for(int i=0;i<15;i++){
-             MyTask myTask = new MyTask(i);
-             executor.execute(myTask);
-             System.out.println("线程池中线程数目："+executor.getPoolSize()+"，队列中等待执行的任务数目："+
-             executor.getQueue().size()+"，已执行玩别的任务数目："+executor.getCompletedTaskCount());
-         }
-         executor.shutdown();
-     }
-}
+         	for(int i=0;i<15;i++){
+             	MyTask myTask = new MyTask(i);
+             	executor.execute(myTask);
+             	System.out.println("线程池中线程数目："+executor.getPoolSize()+"，队列中等待执行的任务数目："+
+             	executor.getQueue().size()+"，已执行玩别的任务数目："+executor.getCompletedTaskCount());
+         	}
+        		executor.shutdown();
+     	}
+	}
  
  
-class MyTask implements Runnable {
-    private int taskNum;
+	class MyTask implements Runnable {
+    		private int taskNum;
      
-    public MyTask(int num) {
-        this.taskNum = num;
-    }
+    		public MyTask(int num) {
+        		this.taskNum = num;
+    		}
      
-    @Override
-    public void run() {
-        System.out.println("正在执行task "+taskNum);
-        try {
-            Thread.currentThread().sleep(4000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        System.out.println("task "+taskNum+"执行完毕");
-    }
-}
+    		@Override
+    		public void run() {
+        		System.out.println("正在执行task "+taskNum);
+        		try {
+            		Thread.currentThread().sleep(4000);
+        		} catch (InterruptedException e) {
+            		e.printStackTrace();
+        		}
+        		System.out.println("task "+taskNum+"执行完毕");
+    		}
+	}
+	
  　　执行结果：
 
  View Code
@@ -624,27 +640,31 @@ class MyTask implements Runnable {
 
 　　不过在java doc中，并不提倡我们直接使用ThreadPoolExecutor，而是使用Executors类中提供的几个静态方法来创建线程池：
 
-Executors.newCachedThreadPool();        //创建一个缓冲池，缓冲池容量大小为Integer.MAX_VALUE
-Executors.newSingleThreadExecutor();   //创建容量为1的缓冲池
-Executors.newFixedThreadPool(int);    //创建固定容量大小的缓冲池
+	Executors.newCachedThreadPool();        //创建一个缓冲池，缓冲池容量大小为Integer.MAX_VALUE
+	Executors.newSingleThreadExecutor();   //创建容量为1的缓冲池
+	Executors.newFixedThreadPool(int);    //创建固定容量大小的缓冲池
+	
  　　下面是这三个静态方法的具体实现;
 
-public static ExecutorService newFixedThreadPool(int nThreads) {
-    return new ThreadPoolExecutor(nThreads, nThreads,
+	public static ExecutorService newFixedThreadPool(int nThreads) {
+    		return new ThreadPoolExecutor(nThreads, nThreads,
                                   0L, TimeUnit.MILLISECONDS,
                                   new LinkedBlockingQueue<Runnable>());
-}
-public static ExecutorService newSingleThreadExecutor() {
-    return new FinalizableDelegatedExecutorService
-        (new ThreadPoolExecutor(1, 1,
+	}
+	
+	public static ExecutorService newSingleThreadExecutor() {
+    		return new FinalizableDelegatedExecutorService
+        		(new ThreadPoolExecutor(1, 1,
                                 0L, TimeUnit.MILLISECONDS,
                                 new LinkedBlockingQueue<Runnable>()));
-}
-public static ExecutorService newCachedThreadPool() {
-    return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+	}
+	
+	public static ExecutorService newCachedThreadPool() {
+    		return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
                                   60L, TimeUnit.SECONDS,
                                   new SynchronousQueue<Runnable>());
-}
+	}
+	
 　　从它们的具体实现来看，它们实际上也是调用了ThreadPoolExecutor，只不过参数都已配置好了。
 
 　　newFixedThreadPool创建的线程池corePoolSize和maximumPoolSize值是相等的，它使用的LinkedBlockingQueue；
